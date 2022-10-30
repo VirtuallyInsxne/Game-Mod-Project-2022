@@ -570,6 +570,7 @@ public:
 		bool		tetherMover				:1;			// Currently using a dynamic tether to a mover
 		bool		meleeSuperhero			:1;
 		bool		killerGuard				:1;			// Do 100 points of damage with each hit
+		bool		isCaptured				:1;			// Check if the monster is captured or not
 	} aifl;
 	
 	//
