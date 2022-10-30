@@ -63,6 +63,20 @@ idAI::idAI ( void ) {
 	enemy.lastVisibleChangeTime	= 0;
 	enemy.lastVisibleTime		= 0;
 
+	//MOD
+	isCaptured				= false;
+	level					= 0;
+	exp						= 0;
+	move1					= "";
+	move2					= "";
+	move3					= "";
+	move4					= "";
+	pokemonType				= "";
+	attack_stat				= 0;
+	def_stat				= 0;
+	hp_stat					= 0;
+	speed_stat				= 0;
+
 	fl.neverDormant			= false;		// AI's can go dormant
 
 	allowEyeFocus			= true;

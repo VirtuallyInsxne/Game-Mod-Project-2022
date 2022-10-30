@@ -514,6 +514,24 @@ public:
 	int						talkBusyCount;
 	int						speakTime;
 
+	//MOD
+	bool					isCaptured;
+	int						level;
+	int						exp;
+	int						expNext;
+	idStr					move1;
+	idStr					move2;
+	idStr					move3;
+	idStr					move4;
+	idStr					pokemonType;
+	int						attack_stat = 0;
+	int						hp_stat = 0;
+	int						def_stat = 0;
+	int						speed_stat = 0;
+	void					apply_levelup();
+	void					add_exp(int e);
+
+	
 	// Focus
 	idEntityPtr<idEntity>	lookTarget;
 	aiFocus_t				focusType;	
@@ -570,7 +588,6 @@ public:
 		bool		tetherMover				:1;			// Currently using a dynamic tether to a mover
 		bool		meleeSuperhero			:1;
 		bool		killerGuard				:1;			// Do 100 points of damage with each hit
-		bool		isCaptured				:1;			// Check if the monster is captured or not
 	} aifl;
 	
 	//
