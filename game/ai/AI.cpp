@@ -63,7 +63,7 @@ idAI::idAI ( void ) {
 	enemy.lastVisibleChangeTime	= 0;
 	enemy.lastVisibleTime		= 0;
 
-	//MOD
+	//PoQuakeMon MOD
 	isCaptured				= false;
 	level					= 0;
 	exp						= 0;
@@ -71,7 +71,7 @@ idAI::idAI ( void ) {
 	move2					= "";
 	move3					= "";
 	move4					= "";
-	pokemonType				= "";
+	monsterType				= "";
 	attack_stat				= 0;
 	def_stat				= 0;
 	hp_stat					= 0;

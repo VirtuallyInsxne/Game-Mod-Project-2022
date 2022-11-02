@@ -434,6 +434,22 @@ public:
 	void					Spawn( void );
 	void					Think( void );
 
+	//PoQuakeMon Mod
+	bool inBattle;
+	int Captured;
+	int playerAtk;
+	int playerDef;
+	int playerSpd;
+	int playerHp;
+	int playerExp;
+	int playerExpNextLevel;
+	int playerCurrentLevel;
+	idStr monsterClass;
+	idStr move1;
+	idStr move2;
+	idStr move3;
+	idStr move4;
+
 	// save games
 	void					Save( idSaveGame *savefile ) const;					// archives object for save game file
 	void					Restore( idRestoreGame *savefile );					// unarchives object from save game file

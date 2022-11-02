@@ -63,15 +63,39 @@ rvMonsterGrunt::Spawn
 void rvMonsterGrunt::Spawn ( void ) {
 	rageThreshold = spawnArgs.GetInt ( "health_rageThreshold" );
 
-	// Custom actions
-	actionMeleeMoveAttack.Init	( spawnArgs, "action_meleeMoveAttack",	NULL,				AIACTIONF_ATTACK );
-	actionChaingunAttack.Init	( spawnArgs, "action_chaingunAttack",	NULL,				AIACTIONF_ATTACK );
-	actionLeapAttack.Init		( spawnArgs, "action_leapAttack",		"Torso_LeapAttack",	AIACTIONF_ATTACK );
+	if (spawnArgs.GetBool("isCaptured")) {
 
-	// Enraged to start?
-	if ( spawnArgs.GetBool ( "preinject" ) ) {
-		RageStart ( );
-	}	
+		attack_stat = spawnArgs.GetInt("attack_stat");
+		hp_stat = spawnArgs.GetInt("hp_stat");
+		speed_stat = spawnArgs.GetInt("speed_stat");
+		def_stat = spawnArgs.GetInt("def_stat");
+		exp = spawnArgs.GetInt("exp");
+		expNextLevel = spawnArgs.GetInt("expNextLevel");
+		level = spawnArgs.GetInt("level");
+		isCaptured = spawnArgs.GetBool("isCaptured");
+		move1 = spawnArgs.GetString("move1");
+		move2 = spawnArgs.GetString("move2");
+		move3 = spawnArgs.GetString("move3");
+		move4 = spawnArgs.GetString("move4");
+
+	}
+
+	else {
+
+		attack_stat = 2;
+		hp_stat = 15;
+		speed_stat = 3;
+		def_stat = 1;
+		exp = 0;
+		expNextLevel = 10;
+		level = 1;
+		move1 = "Tackle";
+		move2 = "Tail Whip";
+		move3 = "";
+		move4 = "";
+
+	}
+
 }
 
 /*
@@ -224,12 +248,44 @@ rvMonsterGrunt::AdjustHealthByDamage
 =====================
 */
 void rvMonsterGrunt::AdjustHealthByDamage ( int damage ) {
-	// Take less damage during enrage process 
-	if ( rageThreshold && health < rageThreshold ) { 
-		health -= (damage * 0.25f);
-		return;
+	
+	idPlayer* player = gameLocal.GetLocalPlayer();
+
+	if (!isCaptured && player->monsterClass == "") {
+
+		isCaptured = true;
+		player->Captured = 0;
+		player->playerAtk = attack_stat;
+		player->playerDef = def_stat;
+		player->playerSpd = speed_stat;
+		player->playerHp = hp_stat;
+		player->playerExp = exp;
+		player->playerExpNextLevel = expNextLevel;
+		player->playerCurrentLevel = level;
+		player->monsterClass = "grunt";
+		player->move1 = move1;
+		player->move2 = move2;
+		player->move3 = move3;
+		player->move4 = move4;
+
 	}
-	return idAI::AdjustHealthByDamage ( damage );
+
+	else if (isCaptured) {
+
+		Hide();
+		player->Captured = 1;
+
+	}
+
+	else if (!isCaptured && player->monsterClass != "") {
+
+		if (!player->inBattle) {
+
+			//CommenceBattle(player);
+
+		}
+
+	}
 }
 
 /*

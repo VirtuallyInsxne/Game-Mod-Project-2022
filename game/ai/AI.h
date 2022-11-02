@@ -518,12 +518,12 @@ public:
 	bool					isCaptured;
 	int						level;
 	int						exp;
-	int						expNext;
+	int						expNextLevel;
 	idStr					move1;
 	idStr					move2;
 	idStr					move3;
 	idStr					move4;
-	idStr					pokemonType;
+	idStr					monsterType;
 	int						attack_stat = 0;
 	int						hp_stat = 0;
 	int						def_stat = 0;
