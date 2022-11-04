@@ -2504,7 +2504,7 @@ Commence Battle for Turn Based Fighting
 void idAI::StartBattle(idPlayer* player) {
 
 	bool playerTurn = true;
-	bool EndBattle = false;
+	bool inBattle = true;
 	int damage;
 	int currentTurn = 1;
 	int playerCurrentHp = player->playerHp;
@@ -2517,6 +2517,46 @@ void idAI::StartBattle(idPlayer* player) {
 
 	gameLocal.Printf("Started Battle with Grunt.\nEnemy HP = 10.\nYour HP = %d", playerCurrentHp);
 	gameLocal.Printf("\n-------------------------------------------------------------\n");
+
+
+		if (playerCurrentHp == 0 || enemyCurrentHp == 0) {
+
+
+			if (playerCurrentHp == 0 && reviveCounter == 1) {
+
+				gameLocal.Printf("Your Monster Fainted.\n");
+				gameLocal.Printf("Battle Over.\n");
+				gameLocal.Printf("-------------------------------------------------------------\n");
+
+
+			}
+			else if (playerCurrentHp == 0 && reviveCounter == 0) {
+
+				gameLocal.Printf("Press (R) if you would like to use a revive. YOU ONLY GET ONE!\n");
+				gameLocal.Printf("-------------------------------------------------------------\n");
+
+				if (GetKeyState('R') & 1) {
+
+					gameLocal.Printf("You used a revive. Your monster is back to half health.\n");
+					playerCurrentHp = (player->playerHp) / 2;
+				
+
+				}
+
+			}
+
+			if (enemyCurrentHp == 0) {
+
+				gameLocal.Printf("The Enemy Monster Fainted.\n");
+				gameLocal.Printf("Battle Over.\n");
+				gameLocal.Printf("-------------------------------------------------------------\n");
+			
+
+			}
+
+
+		}
+		else {
 
 			if (playerTurn == true) {
 
@@ -2570,7 +2610,6 @@ void idAI::StartBattle(idPlayer* player) {
 						gameLocal.Printf("\n-------------------------------------------------------------\n");
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 
@@ -2616,7 +2655,6 @@ void idAI::StartBattle(idPlayer* player) {
 						gameLocal.Printf("\n-------------------------------------------------------------\n");
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 
@@ -2627,7 +2665,6 @@ void idAI::StartBattle(idPlayer* player) {
 						lastPlayerMoveUsed = "Tail Whip";
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 
@@ -2638,7 +2675,6 @@ void idAI::StartBattle(idPlayer* player) {
 						lastPlayerMoveUsed = "Buff Up";
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 				}
@@ -2656,7 +2692,6 @@ void idAI::StartBattle(idPlayer* player) {
 						gameLocal.Printf("\n-------------------------------------------------------------\n");
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 					else if (GetKeyState('2') & 1) {
@@ -2667,7 +2702,6 @@ void idAI::StartBattle(idPlayer* player) {
 						gameLocal.Printf("\n-------------------------------------------------------------\n");
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 					else if (GetKeyState('3') & 1) {
@@ -2678,18 +2712,16 @@ void idAI::StartBattle(idPlayer* player) {
 						gameLocal.Printf("\n-------------------------------------------------------------\n");
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 					else if (GetKeyState('4') & 1) {
 
-						gameLocal.Printf("You used an Atk Up on your monster.\n");
+						gameLocal.Printf("You used a Atk Up on your monster.\n");
 						gameLocal.Printf("Your monster now has double the damage.\n");
 						gameLocal.Printf("-------------------------------------------------------------\n");
 						lastItemUsed = "Atk Up";
 						currentTurn++;
 						playerTurn = false;
-						
 
 					}
 
@@ -2721,7 +2753,6 @@ void idAI::StartBattle(idPlayer* player) {
 					gameLocal.Printf("\n-------------------------------------------------------------\n");
 					currentTurn++;
 					playerTurn = true;
-					
 
 				}
 
@@ -2742,10 +2773,9 @@ void idAI::StartBattle(idPlayer* player) {
 					gameLocal.Printf("Enemy used Slash and dealt %d", damage);
 					playerCurrentHp -= damage;
 					gameLocal.Printf("\nyour monster now has %d", playerCurrentHp);
-					gameLocal.Printf("\n-------------------------------------------------------------\n");
+					gameLocal.Printf("-------------------------------------------------------------\n");
 					currentTurn++;
 					playerTurn = true;
-					
 
 				}
 
@@ -2756,7 +2786,6 @@ void idAI::StartBattle(idPlayer* player) {
 					lastEnemyMoveUsed = "Tail Whip";
 					currentTurn++;
 					playerTurn = true;
-					
 
 				}
 
@@ -2767,7 +2796,6 @@ void idAI::StartBattle(idPlayer* player) {
 					lastEnemyMoveUsed = "Buff Up";
 					currentTurn++;
 					playerTurn = true;
-					
 
 				}
 
@@ -2776,7 +2804,7 @@ void idAI::StartBattle(idPlayer* player) {
 
 		}
 
-
+	}
 	
 
 /*
