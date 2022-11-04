@@ -17,6 +17,8 @@ public:
 	
 	virtual void		AdjustHealthByDamage	( int damage );
 
+	void StartBattle(idPlayer* player);
+
 protected:
 
 	rvAIAction			actionMeleeMoveAttack;
@@ -90,9 +92,9 @@ void rvMonsterGrunt::Spawn ( void ) {
 		expNextLevel = 10;
 		level = 1;
 		move1 = "Tackle";
-		move2 = "Tail Whip";
-		move3 = "";
-		move4 = "";
+		move2 = "Slash";
+		move3 = "Buff Up";
+		move4 = "Tail Whip";
 
 	}
 
@@ -254,7 +256,7 @@ void rvMonsterGrunt::AdjustHealthByDamage ( int damage ) {
 	if (!isCaptured && player->monsterClass == "") {
 
 		isCaptured = true;
-		player->Captured = 0;
+		player->Captured = 1;
 		player->playerAtk = attack_stat;
 		player->playerDef = def_stat;
 		player->playerSpd = speed_stat;
@@ -262,7 +264,7 @@ void rvMonsterGrunt::AdjustHealthByDamage ( int damage ) {
 		player->playerExp = exp;
 		player->playerExpNextLevel = expNextLevel;
 		player->playerCurrentLevel = level;
-		player->monsterClass = "grunt";
+		player->monsterClass = "monster_grunt";
 		player->move1 = move1;
 		player->move2 = move2;
 		player->move3 = move3;
@@ -273,17 +275,12 @@ void rvMonsterGrunt::AdjustHealthByDamage ( int damage ) {
 	else if (isCaptured) {
 
 		Hide();
-		player->Captured = 1;
+		player->Captured = 0;
 
 	}
 
 	else if (!isCaptured && player->monsterClass != "") {
-
-		if (!player->inBattle) {
-
-			//CommenceBattle(player);
-
-		}
+			idAI::StartBattle(player);
 
 	}
 }

@@ -1081,6 +1081,19 @@ idPlayer::idPlayer() {
 
 	alreadyDidTeamAnnouncerSound = false;
 
+	bool inBattle = false;
+	int Captured = 0;
+	int playerAtk = 0;
+	int playerDef = 0;
+	int playerSpd = 0;
+	int playerHp = 0;
+	int playerExp = 0;
+	idStr monsterClass = "";
+	idStr move1 = "";
+	idStr move2 = "";
+	idStr move3 = "";
+	idStr move4 = "";
+
 	doInitWeapon			= false;
 	noclip					= false;
 	godmode					= false;

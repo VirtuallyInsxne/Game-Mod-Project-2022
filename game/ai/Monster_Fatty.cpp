@@ -32,6 +32,7 @@ public:
 	void				Save							( idSaveGame *savefile ) const;
 	void				Restore							( idRestoreGame *savefile );
 
+	virtual void		AdjustHealthByDamage					(int damage);
 	virtual bool		UpdateAnimationControllers		( void );
 	virtual bool		CanPlayImpactEffect				( idEntity* attacker, idEntity* target ) { return false; };
 	virtual void		AddDamageEffect					( const trace_t &collision, const idVec3 &velocity, const char *damageDefName, idEntity* inflictor );
@@ -270,6 +271,52 @@ void rvMonsterFatty::PlayAttackAnim ( const idVec3& target, int blendFrames ) {
 	}
 	
 	PlayAnim ( ANIMCHANNEL_TORSO, animName, blendFrames );
+}
+
+/*
+=====================
+rvMonsterFatty::CaptureMonster
+=====================
+*/
+void rvMonsterFatty::AdjustHealthByDamage(int damage) {
+
+	idPlayer* player = gameLocal.GetLocalPlayer();
+
+	if (!isCaptured && player->monsterClass == "") {
+
+		isCaptured = true;
+		player->Captured = 0;
+		player->playerAtk = attack_stat;
+		player->playerDef = def_stat;
+		player->playerSpd = speed_stat;
+		player->playerHp = hp_stat;
+		player->playerExp = exp;
+		player->playerExpNextLevel = expNextLevel;
+		player->playerCurrentLevel = level;
+		player->monsterClass = "Fatty";
+		player->move1 = move1;
+		player->move2 = move2;
+		player->move3 = move3;
+		player->move4 = move4;
+
+	}
+
+	else if (isCaptured) {
+
+		Hide();
+		player->Captured = 1;
+
+	}
+
+	else if (!isCaptured && player->monsterClass != "") {
+
+		if (!player->inBattle) {
+
+			//CommenceBattle(player);
+
+		}
+
+	}
 }
 
 /*

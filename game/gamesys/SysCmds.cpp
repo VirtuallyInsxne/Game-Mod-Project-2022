@@ -596,10 +596,10 @@ void Cmd_God_f( const idCmdArgs &args ) {
 
 	if ( player->godmode ) {
 		player->godmode = false;
-		msg = "godmode OFF\n";
+		msg = "Shoot a monster to capture it.\nShoot another monster to start a battle.\nPress one of the designated keys in order to use moves or items.\n\n";
 	} else {
 		player->godmode = true;
-		msg = "godmode ON\n";
+		msg = "Shoot a monster to capture it.\nShoot another monster to start a battle.\nPress one of the designated keys in order to use moves or items.\n";
 	}
 
 	gameLocal.Printf( "%s", msg );

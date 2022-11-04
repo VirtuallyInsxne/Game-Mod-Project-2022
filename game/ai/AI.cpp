@@ -10,7 +10,7 @@ AI.cpp
 #pragma hdrstop
 
 #include "../Game_local.h"
-
+#include <Windows.h>
 #include "AI.h"
 #include "AI_Manager.h"
 #include "AI_Util.h"
@@ -2495,6 +2495,289 @@ bool idAI::Attack ( const char* attackName, jointHandle_t joint, idEntity* targe
 	// Ranged attack (hitscan or projectile)?
 	return ( AttackRanged ( attackName, attackDict, joint, target, pushVelocity ) != NULL );
 }
+
+/*
+=====================
+Commence Battle for Turn Based Fighting
+=====================
+*/
+void idAI::StartBattle(idPlayer* player) {
+
+	bool playerTurn = true;
+	bool EndBattle = false;
+	int damage;
+	int currentTurn = 1;
+	int playerCurrentHp = player->playerHp;
+	int reviveCounter;
+	const char* lastPlayerMoveUsed;
+	const char* lastEnemyMoveUsed;
+	const char* lastItemUsed;
+	int enemyCurrentHp = 10;
+	int enemySelectedMove;
+
+	gameLocal.Printf("Started Battle with Grunt.\nEnemy HP = 10.\nYour HP = %d", playerCurrentHp);
+	gameLocal.Printf("\n-------------------------------------------------------------\n");
+
+			if (playerTurn == true) {
+
+				gameLocal.Printf("Select what you wish to do.\n(P) Fight\n(O)Use Item\n");
+				gameLocal.Printf("-------------------------------------------------------------\n");
+
+				if (GetKeyState('P') & 1) {
+
+					gameLocal.Printf("Select the move you would like your monster to use.\n(1) Tackle\n(2) Slash\n(3) Tail Whip\n(4) Buff Up\n");
+					gameLocal.Printf("-------------------------------------------------------------\n");
+
+					if (GetKeyState('1') & 1) {
+
+						if (lastEnemyMoveUsed == "Tail Whip") {
+
+							damage = (rand() % player->playerAtk + 1) / 2;
+
+							if (lastItemUsed == "Atk Up") {
+
+								damage = ((rand() % player->playerAtk + 1) / 2) * 2;
+
+							}
+
+						}
+
+						else if (lastPlayerMoveUsed == "Buff Up") {
+
+							damage = (rand() % player->playerAtk + 1) * 2;
+
+							if (lastItemUsed == "Atk Up") {
+
+								damage = ((rand() % player->playerAtk + 1) * 2) * 2;
+
+							}
+
+						}
+						else {
+
+							damage = rand() % (player->playerAtk * 2) + 2;
+
+							if (lastItemUsed == "Atk Up") {
+
+								damage = (rand() % player->playerAtk + 1) * 2;
+
+							}
+
+						}
+						gameLocal.Printf("Your monster used Tackle and dealt %d", damage);
+						enemyCurrentHp -= damage;
+						gameLocal.Printf("\nThe enemy now has %d", enemyCurrentHp);
+						gameLocal.Printf("\n-------------------------------------------------------------\n");
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+
+					else if (GetKeyState('2') & 1) {
+
+						if (lastEnemyMoveUsed == "Tail Whip") {
+
+							damage = (rand() % (player->playerAtk * 2) + 2) / 2;
+
+							if (lastItemUsed == "Atk Up") {
+
+								damage = ((rand() % (player->playerAtk * 2) + 2) / 2) * 2;
+
+							}
+
+						}
+
+						else if (lastPlayerMoveUsed == "Buff Up") {
+
+							damage = (rand() % (player->playerAtk * 2) + 2) * 2;
+
+							if (lastItemUsed == "Atk Up") {
+
+								damage = ((rand() % (player->playerAtk * 2) + 2) * 2) * 2;
+
+							}
+
+						}
+						else {
+
+							damage = rand() % (player->playerAtk * 2) + 2;
+
+							if (lastItemUsed == "Atk Up") {
+
+								damage = (rand() % (player->playerAtk * 2) + 2) * 2;
+
+							}
+
+						}
+						gameLocal.Printf("Your monster used Slash and dealt %d", damage);
+						enemyCurrentHp -= damage;
+						gameLocal.Printf("\nThe enemy now has %d", enemyCurrentHp);
+						gameLocal.Printf("\n-------------------------------------------------------------\n");
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+
+					else if (GetKeyState('3') & 1) {
+
+						gameLocal.Printf("Your monster used Tail Whip. The enemy will now do half the damage.\n");
+						gameLocal.Printf("-------------------------------------------------------------\n");
+						lastPlayerMoveUsed = "Tail Whip";
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+
+					else if (GetKeyState('4') & 1) {
+
+						gameLocal.Printf("Your monster used Buff Up. Your monster will now do twice the damage.\n");
+						gameLocal.Printf("-------------------------------------------------------------\n");
+						lastPlayerMoveUsed = "Buff Up";
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+				}
+
+				else if (GetKeyState('O') & 1) {
+
+					gameLocal.Printf("Select the item you would like to use.\n(1) Small Potion\n(2) Medium Potion\n(3) Large Potion\n(4) Atk Up\n");
+					gameLocal.Printf("-------------------------------------------------------------\n");
+
+					if (GetKeyState('1') & 1) {
+
+						gameLocal.Printf("You used a Small Potion on your monster.\n");
+						playerCurrentHp += 2;
+						gameLocal.Printf("Your monster now has %d", playerCurrentHp);
+						gameLocal.Printf("\n-------------------------------------------------------------\n");
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+					else if (GetKeyState('2') & 1) {
+
+						gameLocal.Printf("You used a Medium Potion on your monster.\n");
+						playerCurrentHp += 4;
+						gameLocal.Printf("Your monster now has %d", playerCurrentHp);
+						gameLocal.Printf("\n-------------------------------------------------------------\n");
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+					else if (GetKeyState('3') & 1) {
+
+						gameLocal.Printf("You used a Large Potion on your monster.\n");
+						playerCurrentHp += 6;
+						gameLocal.Printf("Your monster now has %d", playerCurrentHp);
+						gameLocal.Printf("\n-------------------------------------------------------------\n");
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+					else if (GetKeyState('4') & 1) {
+
+						gameLocal.Printf("You used an Atk Up on your monster.\n");
+						gameLocal.Printf("Your monster now has double the damage.\n");
+						gameLocal.Printf("-------------------------------------------------------------\n");
+						lastItemUsed = "Atk Up";
+						currentTurn++;
+						playerTurn = false;
+						
+
+					}
+
+				}
+
+			}
+
+			else if (playerTurn == false && GetKeyState('E') & 1) {
+
+				enemySelectedMove = rand() % 4 + 1;
+
+				if (enemySelectedMove == 1) {
+
+					if (lastPlayerMoveUsed == "Tail Whip") {
+
+						damage = (rand() % player->playerAtk + 1) / 2;
+
+					}
+
+					if (lastEnemyMoveUsed == "Buff Up") {
+
+						damage = (rand() % player->playerAtk + 1) * 2;
+
+					}
+
+					gameLocal.Printf("Enemy used Tackle and dealt %d", damage);
+					playerCurrentHp -= damage;
+					gameLocal.Printf("\nYour monster now has %d", playerCurrentHp);
+					gameLocal.Printf("\n-------------------------------------------------------------\n");
+					currentTurn++;
+					playerTurn = true;
+					
+
+				}
+
+				else if (enemySelectedMove = 2) {
+
+					if (lastPlayerMoveUsed == "Tail Whip") {
+
+						damage = (rand() % (player->playerAtk * 2) + 1) / 2;
+
+					}
+
+					if (lastEnemyMoveUsed == "Buff Up") {
+
+						damage = (rand() % (player->playerAtk * 2) + 1) * 2;
+
+					}
+
+					gameLocal.Printf("Enemy used Slash and dealt %d", damage);
+					playerCurrentHp -= damage;
+					gameLocal.Printf("\nyour monster now has %d", playerCurrentHp);
+					gameLocal.Printf("\n-------------------------------------------------------------\n");
+					currentTurn++;
+					playerTurn = true;
+					
+
+				}
+
+				else if (enemySelectedMove == 3) {
+
+					gameLocal.Printf("The enemy used Tail Whip. Your monster will now do half the damage.\n");
+					gameLocal.Printf("-------------------------------------------------------------\n");
+					lastEnemyMoveUsed = "Tail Whip";
+					currentTurn++;
+					playerTurn = true;
+					
+
+				}
+
+				else if (enemySelectedMove == 4) {
+
+					gameLocal.Printf("The enemy used Buff Up. The enemy will now do twice the damage.\n");
+					gameLocal.Printf("-------------------------------------------------------------\n");
+					lastEnemyMoveUsed = "Buff Up";
+					currentTurn++;
+					playerTurn = true;
+					
+
+				}
+
+
+			}
+
+		}
+
+
+	
 
 /*
 =====================

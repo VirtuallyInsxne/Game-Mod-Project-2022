@@ -20,6 +20,8 @@ public:
 
 	void				BuildActionArray				( void );
 
+	virtual void		AdjustHealthByDamage					(int damage);
+
 	//void				ScriptedFace					( idEntity* faceEnt, bool endWithIdle );
 
 protected:
@@ -419,6 +421,53 @@ void rvMonsterBossMakron::Restore ( idRestoreGame *savefile )  {
 
 	// pre-cache decls
 	gameLocal.FindEntityDefDict ( "monster_makron_legs" );
+}
+
+
+/*
+=====================
+rvMonsterBossMakron::CaptureMonster
+=====================
+*/
+void rvMonsterBossMakron::AdjustHealthByDamage(int damage) {
+
+	idPlayer* player = gameLocal.GetLocalPlayer();
+
+	if (!isCaptured && player->monsterClass == "") {
+
+		isCaptured = true;
+		player->Captured = 0;
+		player->playerAtk = attack_stat;
+		player->playerDef = def_stat;
+		player->playerSpd = speed_stat;
+		player->playerHp = hp_stat;
+		player->playerExp = exp;
+		player->playerExpNextLevel = expNextLevel;
+		player->playerCurrentLevel = level;
+		player->monsterClass = "Boss Makron";
+		player->move1 = move1;
+		player->move2 = move2;
+		player->move3 = move3;
+		player->move4 = move4;
+
+	}
+
+	else if (isCaptured) {
+
+		Hide();
+		player->Captured = 1;
+
+	}
+
+	else if (!isCaptured && player->monsterClass != "") {
+
+		if (!player->inBattle) {
+
+			//CommenceBattle(player);
+
+		}
+
+	}
 }
 
 

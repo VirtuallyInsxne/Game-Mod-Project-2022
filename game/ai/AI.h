@@ -514,7 +514,7 @@ public:
 	int						talkBusyCount;
 	int						speakTime;
 
-	//MOD
+	//PoQuakeMon Mod
 	bool					isCaptured;
 	int						level;
 	int						exp;
@@ -528,9 +528,9 @@ public:
 	int						hp_stat = 0;
 	int						def_stat = 0;
 	int						speed_stat = 0;
-	void					apply_levelup();
-	void					add_exp(int e);
-
+	//void					apply_levelup();
+	//void					add_exp(int e);
+	void					StartBattle(idPlayer* player);
 	
 	// Focus
 	idEntityPtr<idEntity>	lookTarget;

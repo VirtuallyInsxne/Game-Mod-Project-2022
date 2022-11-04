@@ -17,6 +17,8 @@ public:
 	void				Save							( idSaveGame *savefile ) const;
 	void				Restore							( idRestoreGame *savefile );
 
+	virtual void		AdjustHealthByDamage			(int damage);
+
 	// Add some dynamic externals for debugging
 	virtual void		GetDebugInfo					( debugInfoProc_t proc, void* userData );
 
@@ -74,10 +76,44 @@ rvMonsterBerserker::Spawn
 ================
 */
 void rvMonsterBerserker::Spawn ( void ) {
-	actionPopupAttack.Init  ( spawnArgs, "action_popupAttack",	NULL,					AIACTIONF_ATTACK );
+	
+	if (spawnArgs.GetBool("isCaptured")) {
+
+		attack_stat = spawnArgs.GetInt("attack_stat");
+		hp_stat = spawnArgs.GetInt("hp_stat");
+		speed_stat = spawnArgs.GetInt("speed_stat");
+		def_stat = spawnArgs.GetInt("def_stat");
+		exp = spawnArgs.GetInt("exp");
+		expNextLevel = spawnArgs.GetInt("expNextLevel");
+		level = spawnArgs.GetInt("level");
+		isCaptured = spawnArgs.GetBool("isCaptured");
+		move1 = spawnArgs.GetString("move1");
+		move2 = spawnArgs.GetString("move2");
+		move3 = spawnArgs.GetString("move3");
+		move4 = spawnArgs.GetString("move4");
+
+	}
+
+	else {
+
+		attack_stat = 3;
+		hp_stat = 20;
+		speed_stat = 1;
+		def_stat = 3;
+		exp = 0;
+		expNextLevel = 10;
+		level = 1;
+		move1 = "Tackle";
+		move2 = "Slash";
+		move3 = "Buff Up";
+		move4 = "Tail Whip";
+
+	}
+	
+	/*actionPopupAttack.Init(spawnArgs, "action_popupAttack", NULL, AIACTIONF_ATTACK);
 	actionChargeAttack.Init ( spawnArgs, "action_chargeAttack", "Torso_ChargeAttack",	AIACTIONF_ATTACK );
 	PlayEffect( "fx_ambient_electricity", animator.GetJointHandle( "r_Lowerarm_Real" ), true );
-	PlayEffect( "fx_ambient_electricity_mace", animator.GetJointHandle( "chain9" ), true );
+	PlayEffect( "fx_ambient_electricity_mace", animator.GetJointHandle( "chain9" ), true );*/
 }
 
 /*
@@ -272,6 +308,52 @@ void rvMonsterBerserker::OnTacticalChange ( aiTactical_t oldTactical ) {
 		default:
 			actionRangedAttack.fl.disabled = false;
 			break;
+	}
+}
+
+/*
+=====================
+rvMonsterBerserker::CaptureMonster
+=====================
+*/
+void rvMonsterBerserker::AdjustHealthByDamage(int damage) {
+
+	idPlayer* player = gameLocal.GetLocalPlayer();
+
+	if (!isCaptured && player->monsterClass == "") {
+
+		isCaptured = true;
+		player->Captured = 0;
+		player->playerAtk = attack_stat;
+		player->playerDef = def_stat;
+		player->playerSpd = speed_stat;
+		player->playerHp = hp_stat;
+		player->playerExp = exp;
+		player->playerExpNextLevel = expNextLevel;
+		player->playerCurrentLevel = level;
+		player->monsterClass = "Berserker";
+		player->move1 = move1;
+		player->move2 = move2;
+		player->move3 = move3;
+		player->move4 = move4;
+
+	}
+
+	else if (isCaptured) {
+
+		Hide();
+		player->Captured = 1;
+
+	}
+
+	else if (!isCaptured && player->monsterClass != "") {
+
+		if (!player->inBattle) {
+
+			//CommenceBattle(player);
+
+		}
+
 	}
 }
 

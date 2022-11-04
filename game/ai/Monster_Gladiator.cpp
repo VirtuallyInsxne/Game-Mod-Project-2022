@@ -30,6 +30,8 @@ public:
 
 	virtual int				GetDamageForLocation( int damage, int location );
 
+	virtual void			AdjustHealthByDamage		(int damage);
+
 //	virtual void			SetTether			( rvAITether* newTether );
 
 protected:
@@ -309,6 +311,52 @@ void rvMonsterGladiator::HideShield ( int hideTime ) {
 	StopSound ( SND_CHANNEL_ITEM, false );
 
 	shield->Hide ( );
+}
+
+/*
+=====================
+rvMonsterGladiator::CaptureMonster
+=====================
+*/
+void rvMonsterGladiator::AdjustHealthByDamage(int damage) {
+
+	idPlayer* player = gameLocal.GetLocalPlayer();
+
+	if (!isCaptured && player->monsterClass == "") {
+
+		isCaptured = true;
+		player->Captured = 0;
+		player->playerAtk = attack_stat;
+		player->playerDef = def_stat;
+		player->playerSpd = speed_stat;
+		player->playerHp = hp_stat;
+		player->playerExp = exp;
+		player->playerExpNextLevel = expNextLevel;
+		player->playerCurrentLevel = level;
+		player->monsterClass = "Gladiator";
+		player->move1 = move1;
+		player->move2 = move2;
+		player->move3 = move3;
+		player->move4 = move4;
+
+	}
+
+	else if (isCaptured) {
+
+		Hide();
+		player->Captured = 1;
+
+	}
+
+	else if (!isCaptured && player->monsterClass != "") {
+
+		if (!player->inBattle) {
+
+			//CommenceBattle(player);
+
+		}
+
+	}
 }
 
 /*

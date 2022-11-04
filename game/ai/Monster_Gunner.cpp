@@ -16,6 +16,8 @@ public:
 	void				Save							( idSaveGame *savefile ) const;
 	void				Restore							( idRestoreGame *savefile );
 
+	virtual void		AdjustHealthByDamage					(int damage);
+
 	// Add some dynamic externals for debugging
 	virtual void		GetDebugInfo					( debugInfoProc_t proc, void* userData );
 
@@ -288,6 +290,52 @@ bool rvMonsterGunner::CheckActions ( void ) {
 		}
 	}
 	return action;
+}
+
+/*
+=====================
+rvMonsterGunner::CaptureMonster
+=====================
+*/
+void rvMonsterGunner::AdjustHealthByDamage(int damage) {
+
+	idPlayer* player = gameLocal.GetLocalPlayer();
+
+	if (!isCaptured && player->monsterClass == "") {
+
+		isCaptured = true;
+		player->Captured = 0;
+		player->playerAtk = attack_stat;
+		player->playerDef = def_stat;
+		player->playerSpd = speed_stat;
+		player->playerHp = hp_stat;
+		player->playerExp = exp;
+		player->playerExpNextLevel = expNextLevel;
+		player->playerCurrentLevel = level;
+		player->monsterClass = "Gunner";
+		player->move1 = move1;
+		player->move2 = move2;
+		player->move3 = move3;
+		player->move4 = move4;
+
+	}
+
+	else if (isCaptured) {
+
+		Hide();
+		player->Captured = 1;
+
+	}
+
+	else if (!isCaptured && player->monsterClass != "") {
+
+		if (!player->inBattle) {
+
+			//CommenceBattle(player);
+
+		}
+
+	}
 }
 
 /*

@@ -19,6 +19,8 @@ public:
 	void		Save							( idSaveGame *savefile ) const;
 	void		Restore							( idRestoreGame *savefile );
 
+	virtual void AdjustHealthByDamage					(int damage);
+
 	bool		CanTurn							( void ) const;
 
 	void		Think							( void );
@@ -100,7 +102,7 @@ void rvMonsterBossBuddy::InitSpawnArgsVariables ( void )
 //------------------------------------------------------------
 void rvMonsterBossBuddy::Spawn( void ) 
 {
-	mActionRocketAttack.Init( spawnArgs,	"action_rocketAttack",		NULL,	AIACTIONF_ATTACK );
+	/*mActionRocketAttack.Init(spawnArgs, "action_rocketAttack", NULL, AIACTIONF_ATTACK);
 	mActionLightningAttack.Init( spawnArgs,"action_lightningAttack",	NULL,	AIACTIONF_ATTACK );
 	mActionDarkMatterAttack.Init( spawnArgs,"action_dmgAttack",			NULL,	AIACTIONF_ATTACK );
 	mActionMeleeMoveAttack.Init( spawnArgs,	"action_meleeMoveAttack",	NULL,	AIACTIONF_ATTACK );
@@ -120,7 +122,7 @@ void rvMonsterBossBuddy::Spawn( void )
 		mRequestZoneMove.Init( func );
 	}
 
-	HideSurface( "models/monsters/bossbuddy/forcefield" );
+	HideSurface( "models/monsters/bossbuddy/forcefield" );*/
 }
 
 //------------------------------------------------------------
@@ -279,6 +281,52 @@ void rvMonsterBossBuddy::AdjustShieldState( bool becomeShielded )
 //		gameLocal.GetLocalPlayer()->hud->HandleNamedEvent( "hideBossShieldBar" );
 	}
 	mIsShielded = becomeShielded;
+}
+
+/*
+=====================
+rvMonsterBossBuddy::CaptureMonster
+=====================
+*/
+void rvMonsterBossBuddy::AdjustHealthByDamage(int damage) {
+
+	idPlayer* player = gameLocal.GetLocalPlayer();
+
+	if (!isCaptured && player->monsterClass == "") {
+
+		isCaptured = true;
+		player->Captured = 0;
+		player->playerAtk = attack_stat;
+		player->playerDef = def_stat;
+		player->playerSpd = speed_stat;
+		player->playerHp = hp_stat;
+		player->playerExp = exp;
+		player->playerExpNextLevel = expNextLevel;
+		player->playerCurrentLevel = level;
+		player->monsterClass = "Boss Buddy";
+		player->move1 = move1;
+		player->move2 = move2;
+		player->move3 = move3;
+		player->move4 = move4;
+
+	}
+
+	else if (isCaptured) {
+
+		Hide();
+		player->Captured = 1;
+
+	}
+
+	else if (!isCaptured && player->monsterClass != "") {
+
+		if (!player->inBattle) {
+
+			//CommenceBattle(player);
+
+		}
+
+	}
 }
 
 //------------------------------------------------------------
